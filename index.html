@@ -742,4 +742,882 @@
             background-color: white;
             border-radius: 0.75rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 38rem;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+        
+        .modal.is-open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--secondary-blue);
+            color: white;
+            padding: 1rem;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #quote-form-modal .modal-header {
+            background-color: var(--primary-blue);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            color: #374151;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .text-green { color: #10b981; } /* Green-600 */
+        .text-yellow { color: #f59e0b; } /* Yellow-600 */
+        .text-red { color: #ef4444; } /* Red-600 */
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Utility for mobile icon sizing */
+        .w-6 { width: 1.5rem; }
+        .h-6 { height: 1.5rem; }
+        .w-10 { width: 2.5rem; }
+        .h-10 { height: 2.5rem; }
+        .w-5 { width: 1.25rem; }
+        .h-5 { height: 1.25rem; }
+
+    </style>
+</head>
+<body>
+
+    <!-- SVG Icon Definitions (Used throughout the site) -->
+    <svg style="display: none;">
+        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></symbol>
+        <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></symbol>
+        <symbol id="icon-layout-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path><path d="M15 3v18"></path></symbol>
+        <symbol id="icon-boxes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></symbol>
+        <symbol id="icon-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"></path><path d="m7 7 4-4"></path><path d="m10 11 3-3V3"></path><path d="M15 15h2c2.8 0 5-2.2 5-5s-2.2-5-5-5h-4"></path></symbol>
+        <symbol id="icon-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18H3c-1.1 0-2-.9-2-2V8a2 2 0 0 1 2-2h3"></path><path d="M15 6h2l2 4h4v8h-2c-1.1 0-2-.9-2-2v-2"></path><path d="M7 18h8"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></symbol>
+        <symbol id="icon-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M17 14h1.5"></path><path d="M7 14h1.5"></path></symbol>
+        <symbol id="icon-drill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h2"></path><path d="M16 12V4h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4"></path><path d="M12 22h-.01"></path><path d="M8 6h4"></path><path d="m14 2 2 2"></path><path d="m10 6-2-2"></path><path d="M14 12h-4"></path><path d="M12 16v-4"></path><path d="M12 22v-6"></path></symbol>
+        <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"></rect><path d="M9 9h6v6H9z"></path><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M20 15h2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></symbol>
+        <symbol id="icon-hard-hat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18V5c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v13"></path><path d="M10 18v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2"></path><path d="M15 3a2 2 0 0 0 2 2v1"></path><path d="M9 3a2 2 0 0 1-2 2v1"></path></symbol>
+        <symbol id="icon-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 12H8"></path><path d="M16 16H8"></path><path d="M16 20H8"></path></symbol>
+        <symbol id="icon-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"></path><path d="M10 17H4"></path><path d="m14 12 3-3 3 3 3-3"></path><circle cx="17" cy="7" r="2"></circle><circle cx="7" cy="17" r="2"></circle></symbol>
+        <symbol id="icon-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14a9 3 0 0 0 18 0V5"></path><path d="M3 12h18"></path><path d="M3 19h18"></path></symbol>
+        <symbol id="icon-message-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></symbol>
+        <symbol id="icon-tags" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l10 10 10-10L12 2z"></path><path d="M7 7h.01"></path></symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-10 7L2 7"></path></symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></symbol>
+        <symbol id="icon-badge-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 4.78 4.77 4 4 0 0 1-4.78 4.77 4 4 0 0 1-4.78-4.77Z"></path><path d="m14 11 3 3 5-5"></path></symbol>
+        <symbol id="icon-user-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></symbol>
+        <symbol id="icon-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol>
+        <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></symbol>
+        <symbol id="icon-twitter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2 1.4-1.1 2.4-2.7 2.4-4.5 0-.4 0-.8-.1-1.2C7.8 7.2 4 5 4 5s3 3 7 3c.6 0 1.2-.1 1.8-.3 1.2-.4 2.1-1.2 2.7-2.2 0-.6-.1-1.2-.4-1.8 1.4-.4 2.8-.8 4.1-1.3z"></path></symbol>
+
+    </svg>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <!-- Logo/Brand -->
+            <div class="logo">
+                <a href="#top">
+                    <img src="scripts/11111.png" alt="Harkulex Automations Official Logo" style="height: 4rem; width: auto; object-fit: contain;">
+                </a>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="desktop-menu">
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#products" class="nav-link">Products</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#resources" class="nav-link">Resources</a>
+                <a href="#brands" class="nav-link">Brands</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#about" class="nav-link">Who We Are</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="mobile-menu-btn">
+                <button type="button" onclick="toggleMenu()" class="nav-link" style="padding: 0.5rem; background: none; border: none;">
+                    <svg id="menu-icon-open" class="w-6 h-6" fill="white"><use href="#icon-menu"/></svg>
+                    <svg id="menu-icon-close" class="w-6 h-6" fill="white" style="display: none;"><use href="#icon-x"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Content -->
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="container">
+                <a href="#categories" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-layout-grid"/></svg><span>Categories</span></a>
+                <a href="#products" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-boxes"/></svg><span>Products</span></a>
+                <a href="#services" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-handshake"/></svg><span>Services</span></a>
+                <a href="#resources" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-file-text"/></svg><span>Resources</span></a>
+                <a href="#brands" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-tags"/></svg><span>Brands</span></a>
+                <a href="#testimonials" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-message-square"/></svg><span>Testimonials</span></a>
+                <a href="#contact" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-mail"/></svg><span>Contact</span></a>
+                <a href="#about" onclick="toggleMenu()"><svg class="w-5 h-5"><use href="#icon-users"/></svg><span>Who We Are</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Anchor for Home Button) -->
+    <header id="top" class="hero">
+        <div class="container">
+            <h1>Automation & Innovation for Industry</h1>
+            <p>
+                Your reliable partner for high-quality **Industrial Equipment**, **Power Tools**, and cutting-edge **Electronic Components**.
+                <br>
+                <span style="font-weight: 700; color: var(--secondary-blue);">We specialize in B2B supply but also welcome B2C customers.</span>
+            </p>
+            <a href="#categories" class="cta-button">
+                Explore Our Catalog
+            </a>
+        </div>
+    </header>
+
+    <!-- Categories Section -->
+    <section id="categories" class="categories-section">
+        <div class="container">
+            <h2>Our Core Product Categories</h2>
+            <div class="category-grid">
+                <!-- Category Card 1 -->
+                <div class="category-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-factory"/></svg></div>
+                    <h3>Industrial Automation</h3>
+                    <p>PLCs, Sensors, Control Panels, VFDs, and Robotics components for efficient manufacturing.</p>
+                </div>
+                <!-- Category Card 2 -->
+                <div class="category-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-drill"/></svg></div>
+                    <h3>Power Tools & Handhelds</h3>
+                    <p>Drills, grinders, cutting tools, and specialized maintenance equipment from top brands.</p>
+                </div>
+                <!-- Category Card 3 -->
+                <div class="category-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-cpu"/></svg></div>
+                    <h3>Electronic Components</h3>
+                    <p>Circuit protection, passive components, semiconductors, and testing instruments.</p>
+                </div>
+                <!-- Category Card 4 -->
+                <div class="category-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-hard-hat"/></svg></div>
+                    <h3>Safety & Consumables</h3>
+                    <p>PPE, safety equipment, fasteners, lubricants, and high-quality industrial consumables.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products">
+        <div class="container">
+            <h2>Our Full Product Lineup</h2>
+
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="All">All Products</button>
+                <button class="filter-btn" data-category="Industrial">Industrial</button>
+                <button class="filter-btn" data-category="Electronics">Electronics</button>
+                <button class="filter-btn" data-category="Tools">Tools</button>
+                <button class="filter-btn" data-category="Safety">Safety</button>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="product-grid">
+                <!-- Product cards will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center">
+                <button id="load-more-btn" onclick="loadMore()" class="load-more-btn">
+                    Load More Products
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services / Value Proposition Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <h2>Why Choose Harkulex?</h2>
+            <div class="service-grid">
+                <!-- Feature 1 -->
+                <div class="service-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-badge-check"/></svg></div>
+                    <h3>Unmatched Quality</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280;">We source only reliable, certified products to ensure peak performance and longevity for your projects.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="service-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-handshake"/></svg></div>
+                    <h3>Dedicated Support</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280;">Expert advice and technical support available to help you select and implement the right solution.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="service-card">
+                    <div class="icon-wrapper"><svg class="w-10 h-10"><use href="#icon-truck"/></svg></div>
+                    <h3>Efficient Supply Chain</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280;">Streamlined logistics focused on quick and dependable delivery across all major regions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Resources / Downloads Section -->
+    <section id="resources" class="resources-section">
+        <div class="container">
+            <h2 style="color: var(--secondary-blue);">Technical Resources & Downloads</h2>
+            <p style="text-align: center; color: #4b5563; margin-bottom: 2.5rem; max-width: 42rem; margin-left: auto; margin-right: auto;">
+                Access essential documentation, guides, and specifications to support your planning and implementation needs.
+            </p>
+            
+            <div class="resource-grid">
+                <!-- Resource 1 -->
+                <a href="#" class="resource-link">
+                    <div class="icon-wrapper"><svg class="w-6 h-6"><use href="#icon-file-text"/></svg></div>
+                    <div>
+                        <h3>Full 2024 Product Catalog (PDF)</h3>
+                        <p>Download our comprehensive list of available stock.</p>
+                    </div>
+                </a>
+                <!-- Resource 2 -->
+                <a href="#" class="resource-link">
+                    <div class="icon-wrapper"><svg class="w-6 h-6"><use href="#icon-settings-2"/></svg></div>
+                    <div>
+                        <h3>VFD Commissioning Checklist</h3>
+                        <p>A step-by-step guide for installation and setup.</p>
+                    </div>
+                </a>
+                <!-- Resource 3 -->
+                <a href="#" class="resource-link">
+                    <div class="icon-wrapper"><svg class="w-6 h-6"><use href="#icon-database"/></svg></div>
+                    <div>
+                        <h3>Generic Sensor Datasheets</h3>
+                        <p>Standard specifications for proximity and photoelectric sensors.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <div class="container">
+            <h2 style="color: var(--secondary-blue);">Trusted by Industry Professionals</h2>
+            <div class="testimonial-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <p>"The PLC units arrived on time and integration was flawless. Harkulex is now our go-to for industrial components."</p>
+                    <p class="author">- Anil Sharma, Manufacturing Head</p>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <p>"Excellent quality tools at competitive prices. The customer support helped us find the right equipment for our maintenance team."</p>
+                    <p class="author">- Deepak Rao, Engineering Services</p>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card">
+                    <p>"Great selection of electronic components. Perfect for rapid prototyping without compromising on component quality."</p>
+                    <p class="author">- Pooja Singh, R&D Engineer</p>
+                </div>
+            </div>
+        </div>
+    </section>
     
+    <!-- Brands We Deal In (Animated Marquee) -->
+    <section id="brands" class="marquee-section">
+        <div class="container">
+            <h2 style="color: white;">Authorised Dealers & Leading Brands We Supply</h2>
+            
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <!-- BEGIN Brand Logos (Repeated twice for seamless looping) -->
+                    <div style="display: flex;">
+                        <div class="brand-logo">Siemens</div>
+                        <div class="brand-logo">Rockwell / A-B</div>
+                        <div class="brand-logo">Schneider Electric</div>
+                        <div class="brand-logo">Mitsubishi Electric</div>
+                        <div class="brand-logo">Omron</div>
+                        <div class="brand-logo">ABB</div>
+                        <div class="brand-logo">Yaskawa</div>
+                        <div class="brand-logo">Danfoss</div>
+                        <div class="brand-logo">SKF</div>
+                        <div class="brand-logo">FAG (Schaeffler)</div>
+                        <div class="brand-logo">Pepperl+Fuchs</div>
+                        <div class="brand-logo">SICK</div>
+                        <div class="brand-logo">Polycab</div>
+                        <div class="brand-logo">LAPP Kabel</div>
+                        <div class="brand-logo">Keyence</div>
+                    </div>
+                    <!-- END Brand Logos -->
+                    
+                    <!-- BEGIN Brand Logos - COPY (Essential for the infinite loop effect) -->
+                    <div style="display: flex;">
+                        <div class="brand-logo">Siemens</div>
+                        <div class="brand-logo">Rockwell / A-B</div>
+                        <div class="brand-logo">Schneider Electric</div>
+                        <div class="brand-logo">Mitsubishi Electric</div>
+                        <div class="brand-logo">Omron</div>
+                        <div class="brand-logo">ABB</div>
+                        <div class="brand-logo">Yaskawa</div>
+                        <div class="brand-logo">Danfoss</div>
+                        <div class="brand-logo">SKF</div>
+                        <div class="brand-logo">FAG (Schaeffler)</div>
+                        <div class="brand-logo">Pepperl+Fuchs</div>
+                        <div class="brand-logo">SICK</div>
+                        <div class="brand-logo">Polycab</div>
+                        <div class="brand-logo">LAPP Kabel</div>
+                        <div class="brand-logo">Keyence</div>
+                    </div>
+                    <!-- END Brand Logos - COPY -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section (General Inquiry Form) -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>Get in Touch (General Inquiry)</h2>
+            <p style="text-align: center; font-size: 1.125rem; color: #4b5563; margin-bottom: 1.5rem;">For general questions or partnership inquiries, please use the form below.</p>
+
+            <form id="contact-form" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Work Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Inquiry</label>
+                    <textarea name="message" id="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="form-submit-btn">
+                    Send Inquiry
+                </button>
+                <p id="form-message" style="display: none; margin-top: 1rem; text-align: center; font-weight: 600;"></p>
+            </form>
+        </div>
+    </section>
+    
+    <!-- High-Impact CTA Banner -->
+    <section id="cta-banner" class="cta-banner">
+        <div class="container cta-banner-content">
+            <h2 style="color: white;">
+                Ready to streamline your industrial supply chain?
+            </h2>
+            <button onclick="showQuoteForm()" class="cta-banner-btn">
+                Get Your Custom Quote Today
+            </button>
+        </div>
+    </section>
+
+
+    <!-- Who We Are Section -->
+    <section id="about" style="background-color: white;">
+        <div class="container">
+            <h2>Who We Are: The Harkulex Story</h2>
+            
+            <div class="about-grid">
+                
+                <!-- Story Text -->
+                <div>
+                    <p style="font-size: 1.125rem; color: #4b5563; margin-bottom: 1rem;">
+                        Harkulex Automations was born from a shared vision of providing reliable, high-quality industrial and electronic supplies. Founded by **Kuldeep Kumar** and **Harsh Shreshtha Singh**, we are a young company driven by passion and a commitment to streamlining supply chains for businesses across India.
+                    </p>
+                    <p style="font-size: 1.125rem; color: #4b5563;">
+                        Our primary focus is serving **Business-to-Business (B2B)** industrial clients with customized solutions and bulk ordering capabilities, while also offering direct support to **Business-to-Consumer (B2C)** individual buyers and hobbyists.
+                    </p>
+                </div>
+
+                <!-- Founder Profiles -->
+                <div class="founder-grid">
+                    <!-- Kuldeep Kumar -->
+                    <div class="founder-card">
+                        <div class="founder-avatar">
+                            <svg class="w-10 h-10"><use href="#icon-user-round"/></svg>
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.25rem;">Kuldeep Kumar</h3>
+                        <p style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;">Co-Founder & Director (Age 22)</p>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Admin Email: Admin@Harkulex.com</p>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Phone: 7906735697</p>
+                    </div>
+                    <!-- Harsh Shreshtha Singh -->
+                    <div class="founder-card">
+                        <div class="founder-avatar">
+                            <svg class="w-10 h-10"><use href="#icon-user-round"/></svg>
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.25rem;">Harsh Shreshtha Singh</h3>
+                        <p style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;">Co-Founder & Director (Age 21)</p>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Admin Email: Admin@Harkulex.com</p>
+                        <p style="font-size: 0.75rem; color: #6b7280;">Phone: 7906854442</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                
+                <!-- Column 1: Brand Info -->
+                <div style="grid-column: span 2 / span 2;">
+                    <h4 style="color: white;">Harkulex</h4>
+                    <p style="font-size: 0.875rem;">Innovating supply chain for the future of automation and power solutions.</p>
+                </div>
+                @media (min-width: 768px) {
+                    <div style="grid-column: span 1 / span 1;">
+                }
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul style="list-style: none; font-size: 0.875rem; line-height: 1.5;">
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#products">Catalog</a></li>
+                        <li><a href="#services">Value Props</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#" onclick="showModal('terms-modal'); return false;">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact Details -->
+                <div>
+                    <h4>Contact Info</h4>
+                    <p style="font-size: 0.875rem;">Sales: <a href="mailto:Enquiry@Harkulex.com">Enquiry@Harkulex.com</a></p>
+                    <p style="font-size: 0.875rem;">Support: <a href="mailto:Support@Harkulex.com">Support@Harkulex.com</a></p>
+                    <p style="font-size: 0.875rem;">Phone: 7777777777</p>
+                </div>
+                
+                <!-- Column 4: Location Details -->
+                <div style="grid-column: span 2 / span 2;">
+                    <h4>Office Locations</h4>
+                    <p style="font-size: 0.875rem;">Main Office: 5/178, Khair Road, Aligarh UP (202001)</p>
+                    <p style="font-size: 0.875rem; margin-top: 0.25rem;">Working Office: 1A Geeta Colony, Delhi (110051)</p>
+                </div>
+                @media (min-width: 768px) {
+                    <div style="grid-column: span 1 / span 1;">
+                }
+
+                <!-- Column 5: Social Media -->
+                <div>
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="LinkedIn">
+                            <svg class="w-6 h-6"><use href="#icon-linkedin"/></svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg class="w-6 h-6"><use href="#icon-instagram"/></svg>
+                        </a>
+                        <a href="#" aria-label="Twitter/X">
+                            <svg class="w-6 h-6"><use href="#icon-twitter"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2024 Harkulex Automations. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- MODAL 1: Product Detail View -->
+    <div id="product-detail-modal" class="modal">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 id="detail-product-name" style="font-size: 1.25rem; font-weight: 700;">Product Name Placeholder</h3>
+                <button onclick="closeModal('product-detail-modal')" class="modal-close-btn">
+                    <svg class="w-6 h-6"><use href="#icon-x"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body (Product Content) -->
+            <div class="modal-body">
+                <img id="detail-product-image" src="https://placehold.co/400x300/e0e7ff/333333?text=Loading..." alt="Product Image" style="width: 100%; height: auto; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;">
+                
+                <p style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <span style="font-weight: 600; color: var(--secondary-blue);">Category:</span> 
+                    <span id="detail-product-category" style="color: #374151; font-weight: 500;"></span>
+                </p>
+                
+                <p style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: var(--secondary-blue);">Inventory Status:</span> 
+                    <span id="detail-inventory-status" style="font-size: 1.25rem; font-weight: 700;">Loading...</span>
+                </p>
+
+                <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--primary-blue); margin-top: 1rem; margin-bottom: 0.5rem;">Full Description</h4>
+                <p id="detail-product-description" style="font-size: 0.875rem; line-height: 1.6;"></p>
+
+                <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; text-align: center;">
+                    <button id="detail-quote-btn" style="width: 100%; padding: 0.75rem 1.5rem; font-size: 1.125rem; font-weight: 600; color: white; background-color: var(--primary-blue); border-radius: 0.5rem; border: none; cursor: pointer; box-shadow: var(--shadow-md); transition: background-color 0.2s;">
+                        Request For Quotation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL 2: Quotation Request Form -->
+    <div id="quote-form-modal" class="modal">
+        <div class="modal-content" style="max-width: 44rem;">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 id="quote-form-title" style="font-size: 1.25rem; font-weight: 700;">Quotation Request</h3>
+                <button onclick="closeModal('quote-form-modal')" class="modal-close-btn">
+                    <svg class="w-6 h-6"><use href="#icon-x"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body (Form Content) -->
+            <form id="quote-form" class="modal-body">
+                <input type="hidden" id="quote-product-id" name="productId"> 
+
+                <div class="form-group">
+                    <label for="quote-company">Company Name</label>
+                    <input type="text" id="quote-company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quote-contact-name">Contact Person Name</label>
+                    <input type="text" id="quote-contact-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quote-contact-details">Contact Phone Number</label>
+                    <input type="tel" id="quote-contact-details" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quote-email">Contact Email ID</label>
+                    <input type="email" id="quote-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quote-description">Detailed Requirement (Quantity, Specific Needs, etc.)</label>
+                    <textarea id="quote-description" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" style="width: 100%; padding: 0.75rem 1rem; font-size: 1.125rem; font-weight: 600; color: white; background-color: var(--secondary-blue); border-radius: 0.5rem; border: none; cursor: pointer; box-shadow: var(--shadow-md); transition: background-color 0.2s;">
+                    Submit Quotation Request
+                </button>
+                
+                <p id="quote-form-message" style="display: none; margin-top: 1rem; text-align: center; font-weight: 600;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: T&C Modal -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: var(--primary-blue);">
+                <h3 style="font-size: 1.25rem; font-weight: 700;">Terms and Conditions of Use</h3>
+                <button onclick="closeModal('terms-modal')" class="modal-close-btn">
+                    <svg class="w-6 h-6"><use href="#icon-x"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body (Terms Content) -->
+            <div class="modal-body" style="font-size: 0.875rem;">
+                <p style="color: #6b7280; margin-bottom: 1rem;">Last Updated: October 2024</p>
+                
+                <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--primary-blue); margin-top: 1rem; margin-bottom: 0.5rem;">1. Acceptance of Terms</h4>
+                <p>By accessing or using the Harkulex Automations website (the "Site") or requesting a quote/placing an order, you agree to be bound by these Terms and Conditions ("Terms").</p>
+
+                <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--primary-blue); margin-top: 1rem; margin-bottom: 0.5rem;">2. Product Information and Quotes</h4>
+                <ul style="list-style: disc; padding-left: 1.5rem; line-height: 1.6;">
+                    <li>**Product Accuracy:** Images, descriptions, and specifications are for informational purposes only.</li>
+                    <li>**Pricing and Availability:** All prices displayed are subject to change without notice. Final, binding prices will only be confirmed in a formal, written quote provided by a Harkulex representative.</li>
+                    <li>**Order Process:** Our site operates on a **Quote Request Model**. No order is finalized until confirmed by a purchase order and written acknowledgment from Harkulex.</li>
+                </ul>
+                
+                <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; text-align: center;">
+                    <button onclick="closeModal('terms-modal')" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; font-weight: 600; color: white; background-color: var(--secondary-blue); border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s;">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- MOCK DATA ---
+        const mockProducts = [
+            { id: 1, name: "Precision Servo Motor Kit", category: "Industrial", description: "High-torque, low-latency servo for precision control systems. This kit includes all mounting hardware, an encoder, and a detailed setup guide for rapid deployment in automated assembly lines.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Servo+Kit" },
+            { id: 2, name: "Industrial-Grade PLC (16-I/O)", category: "Industrial", description: "Reliable programmable logic controller for factory automation. Features 16 digital inputs/outputs, Ethernet connectivity for remote monitoring, and supports multiple programming languages.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Industrial+PLC" },
+            { id: 3, name: "Digital Multimeter", category: "Electronics", description: "True RMS meter for accurate electrical troubleshooting. Measures voltage, current, resistance, capacitance, and temperature with high precision. Essential for every technician.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Multimeter" },
+            { id: 4, name: "High-Speed Cordless Drill", category: "Tools", description: "Heavy-duty 18V drill with superior battery life and adjustable torque settings. Designed for continuous professional use in demanding environments.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Cordless+Drill" },
+            { id: 5, name: "Laser Distance Measurer", category: "Tools", description: "Quick and accurate measurements for construction and planning up to 100 meters. Includes area, volume, and Pythagorean measurement functions.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Laser+Measurer" },
+            { id: 6, name: "SMD Capacitor Assortment Kit", category: "Electronics", description: "Comprehensive kit of surface-mount capacitors for prototyping. Contains 50 values ranging from 1pF to 10uF, neatly organized in a labeled plastic case.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Capacitor+Kit" },
+            { id: 7, name: "Heavy-Duty Safety Goggles", category: "Safety", description: "Anti-fog, scratch-resistant goggles for superior eye protection. Meets ANSI Z87.1 standards and fits comfortably over prescription glasses.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Safety+Goggles" },
+            { id: 8, name: "Industrial Ethernet Switch (8-Port)", category: "Industrial", description: "Rugged, unmanaged switch for reliable network connectivity in harsh environments. Features 8 fast Ethernet ports and DIN-rail mounting capability.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Ethernet+Switch" },
+            { id: 9, name: "Variable Frequency Drive (VFD)", category: "Industrial", description: "Controls AC motor speed and torque with high efficiency. Reduces energy consumption and motor wear. Rated for 5HP applications.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=VFD+Drive" },
+            { id: 10, name: "Soldering Station (Digital)", category: "Electronics", description: "Precision temperature control for delicate component work. Features a digital display, rapid heating, and sleep mode for safety and energy savings.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Soldering+Iron" },
+            { id: 11, name: "Impact Wrench (Pneumatic)", category: "Tools", description: "High-power wrench for automotive and heavy machinery repair. Delivers up to 1,200 ft-lbs of maximum torque in a lightweight, durable housing.", image: "https://placehold.co/400x300/4e80c5/ffffff?text=Impact+Wrench" },
+        ];
+        
+        // --- JAVASCRIPT LOGIC ---
+
+        // State variables
+        let currentFilter = 'All';
+        let productsPerPage = 8;
+
+        /**
+         * Generates a mock inventory status string and color class.
+         * @returns {{status: string, colorClass: string}}
+         */
+        const getMockInventoryStatus = () => {
+            const statuses = [
+                { status: "In Stock (50+ units)", colorClass: "text-green" },
+                { status: "Low Stock (Est. 3-5 day lead time)", colorClass: "text-yellow" },
+                { status: "Quote Required (Custom lead time)", colorClass: "text-red" },
+            ];
+            // Randomly select a status for mock representation
+            return statuses[Math.floor(Math.random() * statuses.length)];
+        };
+
+
+        // Function to show any modal
+        const showModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('is-open');
+            // Add a small delay for opacity transition to take effect
+            setTimeout(() => modal.style.opacity = '1', 10); 
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        }
+
+        // Function to close any modal
+        const closeModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('is-open');
+                document.body.style.overflow = 'auto'; // Restore scrolling background
+            }, 300); // Match transition duration
+        }
+
+        // Function to render a single product card
+        const renderProductCard = (product) => `
+            <div class="product-card fade-in">
+                <img src="${product.image}" alt="${product.name}" 
+                    onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0e7ff/333333?text=Image+Unavailable';" />
+                <div class="product-card-body">
+                    <span>${product.category}</span>
+                    <h3>${product.name}</h3>
+                    <p>${product.description.substring(0, 100)}...</p>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="showProductDetails(${product.id})" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; color: white; background-color: var(--primary-blue); border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; box-shadow: var(--shadow-md);">
+                            Details / Request Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Function to render the product grid based on filter and count
+        const renderProductGrid = () => {
+            const grid = document.getElementById('product-grid');
+            const loadMoreButton = document.getElementById('load-more-btn');
+            const filteredProducts = currentFilter === 'All' 
+                ? mockProducts 
+                : mockProducts.filter(p => p.category === currentFilter);
+            
+            const productsToShow = filteredProducts.slice(0, productsPerPage);
+            grid.innerHTML = productsToShow.map(renderProductCard).join('');
+
+            // Update load more button visibility
+            if (productsPerPage >= filteredProducts.length) {
+                loadMoreButton.style.display = 'none';
+            } else {
+                loadMoreButton.style.display = 'block';
+            }
+        };
+
+        // Event handler for filter buttons
+        const handleFilter = (filter) => {
+            currentFilter = filter;
+            productsPerPage = 8; // Reset view when filter changes
+            
+            // Update active button state
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const category = btn.getAttribute('data-category');
+                if (category === filter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderProductGrid();
+        };
+
+        // Event handler for load more button
+        const loadMore = () => {
+            productsPerPage += 4;
+            renderProductGrid();
+        };
+
+        // Minimal JS for mobile menu toggle
+        const toggleMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-icon-open');
+            const closeIcon = document.getElementById('menu-icon-close');
+
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+                openIcon.style.display = 'block';
+                closeIcon.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+                openIcon.style.display = 'none';
+                closeIcon.style.display = 'block';
+            }
+        };
+        
+        // --- MODAL WORKFLOW FUNCTIONS ---
+
+        // Function to show product details modal
+        const showProductDetails = (productId) => {
+            const product = mockProducts.find(p => p.id === productId);
+            if (!product) {
+                console.error('Product not found for ID:', productId);
+                return;
+            }
+
+            const inventory = getMockInventoryStatus(); // Get mock inventory status
+
+            // Populate the product details modal
+            document.getElementById('detail-product-name').textContent = product.name;
+            document.getElementById('detail-product-category').textContent = product.category;
+            document.getElementById('detail-product-description').textContent = product.description;
+            document.getElementById('detail-product-image').src = product.image;
+            document.getElementById('detail-product-image').alt = product.name;
+            
+            // Populate mock inventory status
+            const statusElement = document.getElementById('detail-inventory-status');
+            statusElement.textContent = inventory.status;
+            statusElement.className = inventory.colorClass;
+            
+            // Update the quote button inside the details modal to trigger the form modal
+            document.getElementById('detail-quote-btn').onclick = () => {
+                closeModal('product-detail-modal'); // Close detail modal first
+                showQuoteForm(productId, product.name); // Open form modal
+            };
+
+            showModal('product-detail-modal');
+        };
+
+        // Function to show the quote form modal (General or Specific)
+        const showQuoteForm = (productId = null, productName = null) => {
+            document.getElementById('quote-product-id').value = productId || '';
+            
+            const formTitle = document.getElementById('quote-form-title');
+            const descriptionArea = document.getElementById('quote-description');
+            
+            if (productName) {
+                formTitle.textContent = `Request Quotation for: ${productName}`;
+                descriptionArea.value = `I am interested in ordering a bulk quantity of the ${productName}. Please provide a quotation and expected lead time for a custom volume.`;
+            } else {
+                formTitle.textContent = `General Quotation Request`;
+                descriptionArea.value = '';
+            }
+
+            showModal('quote-form-modal');
+        };
+
+        // General Contact Form submission handler (Section #contact)
+        const handleContactSubmit = (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const messageBox = document.getElementById('form-message');
+            
+            messageBox.textContent = 'Thank you! Your general inquiry has been successfully received. We will contact you shortly.';
+            messageBox.style.display = 'block';
+            messageBox.className = 'text-green fade-in';
+
+            setTimeout(() => {
+                form.reset();
+                messageBox.style.display = 'none';
+            }, 4000);
+        };
+        
+        // Quotation Form Submission Handler (Modal #quote-form-modal)
+        const handleQuoteSubmit = (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const messageBox = document.getElementById('quote-form-message');
+            
+            const data = {
+                company: document.getElementById('quote-company').value,
+                productId: document.getElementById('quote-product-id').value,
+                // ... other fields
+            };
+            
+            console.log('Quote Request Submitted (Mock Data):', data);
+
+            messageBox.textContent = 'Your quotation request has been successfully submitted! A sales representative will contact you within 24 hours.';
+            messageBox.style.display = 'block';
+            messageBox.className = 'text-green fade-in';
+
+            setTimeout(() => {
+                form.reset();
+                messageBox.style.display = 'none';
+                closeModal('quote-form-modal');
+            }, 4000);
+        };
+
+
+        // Initialization: Run when the document is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the product grid display
+            renderProductGrid();
+
+            // Set up event listener for the general contact form
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', handleContactSubmit);
+            }
+            
+            // Set up event listener for the new quotation form
+            const quoteForm = document.getElementById('quote-form');
+            if (quoteForm) {
+                quoteForm.addEventListener('submit', handleQuoteSubmit);
+            }
+
+            // Set up event listeners for filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => handleFilter(btn.getAttribute('data-category')));
+            });
+            
+            // Initialize the 'All Products' filter to active
+            document.querySelector('.filter-btn[data-category="All"]').classList.add('active');
+        });
+
+    </script>
+</body>
+</html>
